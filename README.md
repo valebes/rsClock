@@ -1,2 +1,2 @@
 # rsClock
-![Screenshot](https://imgur.com/a/GobZRd7)
+![Screenshot](https://i.imgur.com/WUvnKVB.png)
