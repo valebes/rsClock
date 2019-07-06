@@ -1,0 +1,9 @@
+[package]
+name = "rsclock"
+version = "0.1.0"
+authors = ["valebes"]
+edition = "2018"
+
+[dependencies]
+termion = "*"
+chrono = "0.4"
