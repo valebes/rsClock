@@ -6,13 +6,22 @@
 
 extern crate chrono;
 extern crate termion;
-
+/*
 const ONE: [[bool; 6]; 5] = [
     [false, false, false, false, true, true],
     [false, false, false, false, true, true],
     [false, false, false, false, true, true],
     [false, false, false, false, true, true],
     [false, false, false, false, true, true],
+];
+ */
+
+const ONE: [[bool; 6]; 5] = [
+    [false, false, true, true, false, false],
+    [false, false, true, true, false, false],
+    [false, false, true, true, false, false],
+    [false, false, true, true, false, false],
+    [false, false, true, true, false, false],
 ];
 
 const TWO: [[bool; 6]; 5] = [
