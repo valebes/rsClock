@@ -131,7 +131,7 @@ fn main() {
             }
             x = x + 7;
         }
-        print!("{}{}", cursor::Goto(12, 6 + y), d_date);
+        print!("{}{}", cursor::Goto(13, 6 + y), d_date);
         io::stdout().flush().unwrap();
         while time == Local::now().format(clock).to_string() {
             if resize_watcher(size) {
