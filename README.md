@@ -1,5 +1,5 @@
 # rsClock
-![Screenshot](https://i.imgur.com/WUvnKVB.png)
+![Screenshot](https://i.imgur.com/oyCXhXU.png)
 
 ## Introduction
 rsClock is a simple terminal clock.
