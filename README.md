@@ -1,4 +1,6 @@
-![Logo](https://i.imgur.com/1TF28pq.png)
+<p align="center">
+  <img alt="Logo" width="454" src="https://i.imgur.com/1TF28pq.png">
+</p>
 
 [![Build Status](https://travis-ci.org/valebes/rsClock.svg?branch=master)](https://travis-ci.org/valebes/rsClock)
 ![GitHub](https://img.shields.io/github/license/valebes/rsClock.svg)
