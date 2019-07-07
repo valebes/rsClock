@@ -1,4 +1,7 @@
 # rsClock
+[![Build Status](https://travis-ci.org/valebes/rsClock.svg?branch=master)](https://travis-ci.org/valebes/rsClock)
+![GitHub](https://img.shields.io/github/license/valebes/rsClock.svg)
+
 ![Screenshot](https://i.imgur.com/oyCXhXU.png)
 
 ## Introduction
