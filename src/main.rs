@@ -1,16 +1,16 @@
 /*
-                               
+
 ██████╗ ███████╗ ██████╗██╗      ██████╗  ██████╗██╗  ██╗
 ██╔══██╗██╔════╝██╔════╝██║     ██╔═══██╗██╔════╝██║ ██╔╝
-██████╔╝███████╗██║     ██║     ██║   ██║██║     █████╔╝ 
-██╔══██╗╚════██║██║     ██║     ██║   ██║██║     ██╔═██╗ 
+██████╔╝███████╗██║     ██║     ██║   ██║██║     █████╔╝
+██╔══██╗╚════██║██║     ██║     ██║   ██║██║     ██╔═██╗
 ██║  ██║███████║╚██████╗███████╗╚██████╔╝╚██████╗██║  ██╗
 ╚═╝  ╚═╝╚══════╝ ╚═════╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
 
    Copyright (c) 2019 Valerio Besozzi
    MIT License
    https://github.com/valebes/rsClock
-              
+
 */
 
 extern crate chrono;
@@ -106,7 +106,7 @@ const DIV: [[bool; 6]; 5] = [
 
 use chrono::prelude::*;
 
-use termion::{clear, color::*, cursor};
+use termion::{clear, color, cursor};
 
 use std::time::{Duration, Instant};
 
@@ -114,7 +114,15 @@ use std::thread;
 
 use std::io::{self, Write};
 
+use std::env;
+
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut debug = false;
+    if args.contains(&"-d".to_string()) {
+        debug = true;
+    }
+
     let clock: &str = "%H:%M";
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
@@ -122,20 +130,42 @@ fn main() {
     loop {
         let size = termion::terminal_size().unwrap();
         println!("\n{}{}", cursor::Hide, clear::All);
+
+        // terminal size is only for debug
+        if debug {
+            println!(
+                "{}(x:{},y:{})",
+                cursor::Goto(size.0 - 12, 1),
+                size.0,
+                size.1
+            );
+        }
+
         let time = Local::now().format(clock).to_string();
         let d_date = Local::now().format(date).to_string();
         let mut hour: Vec<[[bool; 6]; 5]> = Vec::new();
         for c in time.chars() {
             hour.push(symbol(c));
         }
+
         let mut x = 1;
         let mut y = 2;
+
         for digit in hour {
             for j in 0..digit.len() {
                 for i in 0..digit[j].len() {
                     if digit[j][i] == true {
-                        print! {"{}█", cursor::Goto(i as u16 +x, j as u16 +y)};
+                        print!(
+                            "{}{}█",
+                            cursor::Goto((i as u16 + x), (j as u16 + y)),
+                            color::Bg(color::White)
+                        );
                     }
+                    print!(
+                        "{}{}",
+                        cursor::Goto((i as u16 + x), (j as u16 + y)),
+                        color::Bg(color::Reset)
+                    );
                 }
             }
             x = x + 7;
