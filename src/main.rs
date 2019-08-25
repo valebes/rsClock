@@ -126,6 +126,9 @@ fn main() {
     let mut fg_color = 1;
     let mut bg_color = 1;
 
+     let mut x = 2;
+     let mut y = 2;
+
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut stdin = async_stdin().bytes();
 
@@ -203,9 +206,9 @@ fn main() {
         for c in time.chars() {
             hour.push(symbol(c));
         }
-
-        let mut x = 2;
-        let mut y = 2;
+       
+        let mut pos_x = x;
+        let mut pos_y = y;
 
         for digit in hour {
             for j in 0..digit.len() {
@@ -214,7 +217,7 @@ fn main() {
                         write!(
                             stdout,
                             "{}{}{}{}",
-                            cursor::Goto(i as u16 + x, j as u16 + y),
+                            cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
                             color::Fg(color::AnsiValue(fg_color)),
                             color::Bg(color::AnsiValue(bg_color)),
                             sym
@@ -224,16 +227,16 @@ fn main() {
                     write!(
                         stdout,
                         "{}{}{}",
-                        cursor::Goto(i as u16 + x, j as u16 + y),
+                        cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
                         color::Fg(color::Reset),
                         color::Bg(color::Reset)
                     )
                     .unwrap();
                 }
             }
-            x = x + 7;
+            pos_x = pos_x + 7;
         }
-        write!(stdout, "{}{}", cursor::Goto(13, 6 + y), d_date).unwrap();
+        write!(stdout, "{}{}", cursor::Goto(12 + x, 6 + y), d_date).unwrap();
         stdout.flush().unwrap();
 
         let mut exit = 0;
