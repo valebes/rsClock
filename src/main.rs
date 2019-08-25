@@ -112,7 +112,7 @@ use std::time::Duration;
 
 use std::thread;
 
-use std::io::{self, stdout, Read, Write};
+use std::io::{stdout, Read, Write};
 
 use std::env;
 
@@ -126,8 +126,8 @@ fn main() {
     let mut fg_color = 1;
     let mut bg_color = 1;
 
-     let mut x = 2;
-     let mut y = 2;
+     let x = 3;
+     let y = 2;
 
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut stdin = async_stdin().bytes();
