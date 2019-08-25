@@ -20,7 +20,7 @@ unix@weeb:~$ cargo build --release
 unix@weeb:~$ ./target/release/rsclock
 ```
 ## To-Do
-* [ ]Complete code refactory
+* [ ] Complete code refactory
 * [x] Colors support 
 * [ ] Alarms
 * [ ] Config file
