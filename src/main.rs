@@ -108,15 +108,11 @@ use chrono::prelude::*;
 
 use termion::{clear, color, cursor, raw::IntoRawMode};
 
-use termion::event::{Key, Event, MouseEvent};
-
-use termion::input::{TermRead, MouseTerminal};
-
 use std::time::Duration;
 
 use std::thread;
 
-use std::io::{self, Write, stdout, stdin};
+use std::io::{self, stdin, stdout, Read, Write};
 
 use std::env;
 
@@ -131,6 +127,8 @@ fn main() {
     let mut bg_color = 1;
 
     let mut stdout = stdout().into_raw_mode().unwrap();
+    let stdin = stdin();
+    let stdin = stdin.lock();
 
     for i in 1..args.len() {
         if &args[i] == &"-d".to_string() {
@@ -140,8 +138,7 @@ fn main() {
             if args.len() <= i + 1 {
                 println!("Invalid option for -s");
                 help(&nm);
-            }
-            else {
+            } else {
                 let ch = args.get(i + 1).unwrap();
                 sym = String::from(&ch.to_string());
             }
@@ -151,13 +148,15 @@ fn main() {
             if args.len() <= i + 1 {
                 println!("Invalid option for --c");
                 help(&nm);
-            }
-            else {
+            } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
                 match num {
                     Ok(val) => fg_color = val,
-                    Err(e) => { println!("Invalid option for -c: {}", e); help(&nm); },
+                    Err(e) => {
+                        println!("Invalid option for -c: {}", e);
+                        help(&nm);
+                    }
                 }
             }
         }
@@ -166,13 +165,15 @@ fn main() {
             if args.len() <= i + 1 {
                 println!("Invalid option for --c");
                 help(&nm);
-            }
-            else {
+            } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
                 match num {
                     Ok(val) => bg_color = val,
-                    Err(e) => { println!("Invalid option for -c: {}", e); help(&nm); },
+                    Err(e) => {
+                        println!("Invalid option for -c: {}", e);
+                        help(&nm);
+                    }
                 }
             }
         }
@@ -180,7 +181,8 @@ fn main() {
     let clock: &str = "%H:%M";
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
-    
+
+    let mut bytes = stdin.bytes();
     loop {
         let size = termion::terminal_size().unwrap();
         write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
@@ -193,7 +195,8 @@ fn main() {
                 cursor::Goto(size.0 - 12, 1),
                 size.0,
                 size.1
-            ).unwrap();
+            )
+            .unwrap();
         }
 
         let time = Local::now().format(clock).to_string();
@@ -217,7 +220,8 @@ fn main() {
                             color::Fg(color::AnsiValue(fg_color)),
                             color::Bg(color::AnsiValue(bg_color)),
                             sym
-                        ).unwrap();
+                        )
+                        .unwrap();
                     }
                     write!(
                         stdout,
@@ -225,28 +229,54 @@ fn main() {
                         cursor::Goto(i as u16 + x, j as u16 + y),
                         color::Fg(color::Reset),
                         color::Bg(color::Reset)
-                    ).unwrap();
+                    )
+                    .unwrap();
                 }
             }
             x = x + 7;
         }
         write!(stdout, "{}{}", cursor::Goto(13, 6 + y), d_date).unwrap();
-        io::stdout().flush().unwrap();
+        stdout.flush().unwrap();
+
+        let mut exit = 0;
         while time == Local::now().format(clock).to_string() {
-            let stdin = stdin();
-            for c in stdin.events() {
-                let evt = c.unwrap();
-                match evt {
-                    Event::Key(Key::Char('q')) => process::exit(1),
-                    _ => (),
+            let b = bytes.next().unwrap().unwrap();
+            match b {
+                // Quit
+                b'q' => {
+                    exit = 1;
+                    break;
                 }
+                b'+' => {
+                    if fg_color as i16 + 1 > 255 {
+                        fg_color = 0;
+                    } else {
+                        fg_color = fg_color + 1;
+                    }
+                    break;
+                }
+                b'-' => {
+                    if fg_color as i16 - 1 < 0 {
+                        fg_color = 255;
+                    } else {
+                        fg_color = fg_color - 1;
+                    }
+                    break;
+                }
+
+                _ => (),
             }
+
             if resize_watcher(size) {
                 break;
             }
             thread::sleep(refresh);
         }
+        if exit == 1 {
+            break;
+        }
     }
+    write!(stdout, "{}", termion::cursor::Show).unwrap();
 }
 
 fn resize_watcher(size: (u16, u16)) -> bool {
