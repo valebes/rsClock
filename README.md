@@ -28,6 +28,6 @@ unix@weeb:~$ ./target/release/rsclock
 ## Screenshots
 
 ![Screenshot](https://i.imgur.com/EhrFUvk.png)
-!Screenshot](https://i.imgur.com/CuirrjG.png)
+![Screenshot](https://i.imgur.com/CuirrjG.png)
 
 #### Work in progress
