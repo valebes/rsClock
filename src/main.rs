@@ -126,29 +126,13 @@ fn main() {
     let mut fg_color = 1;
     let mut bg_color = 1;
 
-     let x = 3;
-     let y = 2;
-
-    let mut stdout = stdout().into_raw_mode().unwrap();
-    let mut stdin = async_stdin().bytes();
+    let x = 3;
+    let y = 2;
 
     for i in 1..args.len() {
-        if &args[i] == &"-d".to_string() {
-            debug = true;
-        }
-        if &args[i] == &"-s".to_string() {
-            if args.len() <= i + 1 {
-                println!("Invalid option for -s");
-                help(&nm);
-            } else {
-                let ch = args.get(i + 1).unwrap();
-                sym = String::from(&ch.to_string());
-            }
-        }
-
         if &args[i] == &"-c".to_string() {
             if args.len() <= i + 1 {
-                println!("Invalid option for --c");
+                println!("Invalid option for -C");
                 help(&nm);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
@@ -161,21 +145,35 @@ fn main() {
                     }
                 }
             }
-        }
-
-        if &args[i] == &"-C".to_string() {
-            if args.len() <= i + 1 {
-                println!("Invalid option for --c");
-                help(&nm);
-            } else {
-                let ch = String::from(&args.get(i + 1).unwrap().to_string());
-                let num = ch.parse::<u8>();
-                match num {
-                    Ok(val) => bg_color = val,
-                    Err(e) => {
-                        println!("Invalid option for -c: {}", e);
-                        help(&nm);
+            if &args[i] == &"-C".to_string() {
+                if args.len() <= i + 1 {
+                    println!("Invalid option for -C");
+                    help(&nm);
+                } else {
+                    let ch = String::from(&args.get(i + 1).unwrap().to_string());
+                    let num = ch.parse::<u8>();
+                    match num {
+                        Ok(val) => bg_color = val,
+                        Err(e) => {
+                            println!("Invalid option for -C: {}", e);
+                            help(&nm);
+                        }
                     }
+                }
+            }
+            if &args[i] == &"-d".to_string() {
+                debug = true;
+            }
+            if &args[i] == &"-h".to_string() {
+                help(&nm);
+            }
+            if &args[i] == &"-s".to_string() {
+                if args.len() <= i + 1 {
+                    println!("Invalid option for -s");
+                    help(&nm);
+                } else {
+                    let ch = args.get(i + 1).unwrap();
+                    sym = String::from(&ch.to_string());
                 }
             }
         }
@@ -183,6 +181,9 @@ fn main() {
     let clock: &str = "%H:%M";
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
+
+    let mut stdout = stdout().into_raw_mode().unwrap();
+    let mut stdin = async_stdin().bytes();
 
     loop {
         let size = termion::terminal_size().unwrap();
@@ -206,7 +207,7 @@ fn main() {
         for c in time.chars() {
             hour.push(symbol(c));
         }
-       
+
         let mut pos_x = x;
         let mut pos_y = y;
 
@@ -243,33 +244,32 @@ fn main() {
         while time == Local::now().format(clock).to_string() {
             let ev = stdin.next();
             if let Some(Ok(b)) = ev {
-            match b {
-                // Quit
-                b'q' => {
-                    exit = 1;
-                    break;
-                },
-                
-                b'+' => {
-                    if fg_color as i16 + 1 > 255 {
-                        fg_color = 0;
-                    } else {
-                        fg_color = fg_color + 1;
+                match b {
+                    // Quit
+                    b'q' => {
+                        exit = 1;
+                        break;
                     }
-                    break;
-                },
-                
-                b'-' => {
-                    if fg_color as i16 - 1 < 0 {
-                        fg_color = 255;
-                    } else {
-                        fg_color = fg_color - 1;
-                    }
-                    break;
-                },
 
-                    
-                _ => (),
+                    b'+' => {
+                        if fg_color as i16 + 1 > 255 {
+                            fg_color = 0;
+                        } else {
+                            fg_color = fg_color + 1;
+                        }
+                        break;
+                    }
+
+                    b'-' => {
+                        if fg_color as i16 - 1 < 0 {
+                            fg_color = 255;
+                        } else {
+                            fg_color = fg_color - 1;
+                        }
+                        break;
+                    }
+
+                    _ => (),
                 }
             }
 
