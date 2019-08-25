@@ -204,7 +204,7 @@ fn main() {
             hour.push(symbol(c));
         }
 
-        let mut x = 1;
+        let mut x = 2;
         let mut y = 2;
 
         for digit in hour {
