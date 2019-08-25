@@ -145,36 +145,36 @@ fn main() {
                     }
                 }
             }
-            if &args[i] == &"-C".to_string() {
-                if args.len() <= i + 1 {
-                    println!("Invalid option for -C");
-                    help(&nm);
-                } else {
-                    let ch = String::from(&args.get(i + 1).unwrap().to_string());
-                    let num = ch.parse::<u8>();
-                    match num {
-                        Ok(val) => bg_color = val,
-                        Err(e) => {
-                            println!("Invalid option for -C: {}", e);
-                            help(&nm);
-                        }
+        }
+        if &args[i] == &"-C".to_string() {
+            if args.len() <= i + 1 {
+                println!("Invalid option for -C");
+                help(&nm);
+            } else {
+                let ch = String::from(&args.get(i + 1).unwrap().to_string());
+                let num = ch.parse::<u8>();
+                match num {
+                    Ok(val) => bg_color = val,
+                    Err(e) => {
+                        println!("Invalid option for -C: {}", e);
+                        help(&nm);
                     }
                 }
             }
-            if &args[i] == &"-d".to_string() {
-                debug = true;
-            }
-            if &args[i] == &"-h".to_string() {
+        }
+        if &args[i] == &"-d".to_string() {
+            debug = true;
+        }
+        if &args[i] == &"-h".to_string() {
+            help(&nm);
+        }
+        if &args[i] == &"-s".to_string() {
+            if args.len() <= i + 1 {
+                println!("Invalid option for -s");
                 help(&nm);
-            }
-            if &args[i] == &"-s".to_string() {
-                if args.len() <= i + 1 {
-                    println!("Invalid option for -s");
-                    help(&nm);
-                } else {
-                    let ch = args.get(i + 1).unwrap();
-                    sym = String::from(&ch.to_string());
-                }
+            } else {
+                let ch = args.get(i + 1).unwrap();
+                sym = String::from(&ch.to_string());
             }
         }
     }
