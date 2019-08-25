@@ -106,13 +106,13 @@ const DIV: [[bool; 6]; 5] = [
 
 use chrono::prelude::*;
 
-use termion::{clear, color, cursor};
+use termion::{clear, color, cursor, raw::IntoRawMode};
 
 use std::time::Duration;
 
 use std::thread;
 
-use std::io::{self, Write};
+use std::io::{self, Write, stdout};
 
 use std::env;
 
@@ -125,6 +125,8 @@ fn main() {
     let mut sym = String::from("█");
     let mut fg_color = 1;
     let mut bg_color = 1;
+
+    let mut stdout = stdout().into_raw_mode().unwrap();
     
     for i in 1..args.len() {
         if &args[i] == &"-d".to_string() {
@@ -177,16 +179,17 @@ fn main() {
 
     loop {
         let size = termion::terminal_size().unwrap();
-        println!("\n{}{}", cursor::Hide, clear::All);
+        write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
 
         // terminal size is only for debug
         if debug {
-            println!(
+            write!(
+                stdout,
                 "{}(x:{},y:{})",
                 cursor::Goto(size.0 - 12, 1),
                 size.0,
                 size.1
-            );
+            ).unwrap();
         }
 
         let time = Local::now().format(clock).to_string();
@@ -203,25 +206,27 @@ fn main() {
             for j in 0..digit.len() {
                 for i in 0..digit[j].len() {
                     if digit[j][i] == true {
-                        print!(
+                        write!(
+                            stdout,
                             "{}{}{}{}",
                             cursor::Goto(i as u16 + x, j as u16 + y),
                             color::Fg(color::AnsiValue(fg_color)),
                             color::Bg(color::AnsiValue(bg_color)),
                             sym
-                        );
+                        ).unwrap();
                     }
-                    print!(
+                    write!(
+                        stdout,
                         "{}{}{}",
                         cursor::Goto(i as u16 + x, j as u16 + y),
                         color::Fg(color::Reset),
                         color::Bg(color::Reset)
-                    );
+                    ).unwrap();
                 }
             }
             x = x + 7;
         }
-        print!("{}{}", cursor::Goto(13, 6 + y), d_date);
+        write!(stdout, "{}{}", cursor::Goto(13, 6 + y), d_date).unwrap();
         io::stdout().flush().unwrap();
         while time == Local::now().format(clock).to_string() {
             if resize_watcher(size) {
