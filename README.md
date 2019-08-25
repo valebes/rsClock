@@ -25,5 +25,9 @@ unix@weeb:~$ ./target/release/rsclock
 * [ ] Alarms
 * [ ] Config file
 * [ ] Maybe themes support?
+## Screenshots
+
+[!Screenshot](https://i.imgur.com/EhrFUvk.png)
+[!Screenshot](https://i.imgur.com/CuirrjG.png)
 
 #### Work in progress
