@@ -106,13 +106,13 @@ const DIV: [[bool; 6]; 5] = [
 
 use chrono::prelude::*;
 
-use termion::{clear, color, cursor, raw::IntoRawMode};
+use termion::{async_stdin, clear, color, cursor, raw::IntoRawMode};
 
 use std::time::Duration;
 
 use std::thread;
 
-use std::io::{self, stdin, stdout, Read, Write};
+use std::io::{self, stdout, Read, Write};
 
 use std::env;
 
@@ -127,8 +127,7 @@ fn main() {
     let mut bg_color = 1;
 
     let mut stdout = stdout().into_raw_mode().unwrap();
-    let stdin = stdin();
-    let stdin = stdin.lock();
+    let mut stdin = async_stdin().bytes();
 
     for i in 1..args.len() {
         if &args[i] == &"-d".to_string() {
@@ -182,7 +181,6 @@ fn main() {
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
 
-    let mut bytes = stdin.bytes();
     loop {
         let size = termion::terminal_size().unwrap();
         write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
@@ -240,13 +238,15 @@ fn main() {
 
         let mut exit = 0;
         while time == Local::now().format(clock).to_string() {
-            let b = bytes.next().unwrap().unwrap();
+            let ev = stdin.next();
+            if let Some(Ok(b)) = ev {
             match b {
                 // Quit
                 b'q' => {
                     exit = 1;
                     break;
-                }
+                },
+                
                 b'+' => {
                     if fg_color as i16 + 1 > 255 {
                         fg_color = 0;
@@ -254,7 +254,8 @@ fn main() {
                         fg_color = fg_color + 1;
                     }
                     break;
-                }
+                },
+                
                 b'-' => {
                     if fg_color as i16 - 1 < 0 {
                         fg_color = 255;
@@ -262,9 +263,11 @@ fn main() {
                         fg_color = fg_color - 1;
                     }
                     break;
-                }
+                },
 
+                    
                 _ => (),
+                }
             }
 
             if resize_watcher(size) {
