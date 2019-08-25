@@ -108,11 +108,15 @@ use chrono::prelude::*;
 
 use termion::{clear, color, cursor, raw::IntoRawMode};
 
+use termion::event::{Key, Event, MouseEvent};
+
+use termion::input::{TermRead, MouseTerminal};
+
 use std::time::Duration;
 
 use std::thread;
 
-use std::io::{self, Write, stdout};
+use std::io::{self, Write, stdout, stdin};
 
 use std::env;
 
@@ -127,7 +131,7 @@ fn main() {
     let mut bg_color = 1;
 
     let mut stdout = stdout().into_raw_mode().unwrap();
-    
+
     for i in 1..args.len() {
         if &args[i] == &"-d".to_string() {
             debug = true;
@@ -176,7 +180,7 @@ fn main() {
     let clock: &str = "%H:%M";
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
-
+    
     loop {
         let size = termion::terminal_size().unwrap();
         write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
@@ -229,6 +233,14 @@ fn main() {
         write!(stdout, "{}{}", cursor::Goto(13, 6 + y), d_date).unwrap();
         io::stdout().flush().unwrap();
         while time == Local::now().format(clock).to_string() {
+            let stdin = stdin();
+            for c in stdin.events() {
+                let evt = c.unwrap();
+                match evt {
+                    Event::Key(Key::Char('q')) => process::exit(1),
+                    _ => (),
+                }
+            }
             if resize_watcher(size) {
                 break;
             }
