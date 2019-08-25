@@ -108,7 +108,7 @@ use chrono::prelude::*;
 
 use termion::{clear, color, cursor};
 
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 use std::thread;
 
@@ -116,13 +116,61 @@ use std::io::{self, Write};
 
 use std::env;
 
+use std::process;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut debug = false;
-    if args.contains(&"-d".to_string()) {
-        debug = true;
-    }
+    let nm = String::from(&args[0].to_string());
+    let mut sym = String::from("█");
+    let mut fg_color = 1;
+    let mut bg_color = 1;
+    
+    for i in 1..args.len() {
+        if &args[i] == &"-d".to_string() {
+            debug = true;
+        }
+        if &args[i] == &"-s".to_string() {
+            if args.len() <= i + 1 {
+                println!("Invalid option for -s");
+                help(&nm);
+            }
+            else {
+                let ch = args.get(i + 1).unwrap();
+                sym = String::from(&ch.to_string());
+            }
+        }
 
+        if &args[i] == &"-c".to_string() {
+            if args.len() <= i + 1 {
+                println!("Invalid option for --c");
+                help(&nm);
+            }
+            else {
+                let ch = String::from(&args.get(i + 1).unwrap().to_string());
+                let num = ch.parse::<u8>();
+                match num {
+                    Ok(val) => fg_color = val,
+                    Err(e) => { println!("Invalid option for -c: {}", e); help(&nm); },
+                }
+            }
+        }
+
+        if &args[i] == &"-C".to_string() {
+            if args.len() <= i + 1 {
+                println!("Invalid option for --c");
+                help(&nm);
+            }
+            else {
+                let ch = String::from(&args.get(i + 1).unwrap().to_string());
+                let num = ch.parse::<u8>();
+                match num {
+                    Ok(val) => bg_color = val,
+                    Err(e) => { println!("Invalid option for -c: {}", e); help(&nm); },
+                }
+            }
+        }
+    }
     let clock: &str = "%H:%M";
     let date: &str = "%F";
     let refresh = Duration::from_millis(100);
@@ -156,14 +204,17 @@ fn main() {
                 for i in 0..digit[j].len() {
                     if digit[j][i] == true {
                         print!(
-                            "{}{}█",
-                            cursor::Goto((i as u16 + x), (j as u16 + y)),
-                            color::Bg(color::White)
+                            "{}{}{}{}",
+                            cursor::Goto(i as u16 + x, j as u16 + y),
+                            color::Fg(color::AnsiValue(fg_color)),
+                            color::Bg(color::AnsiValue(bg_color)),
+                            sym
                         );
                     }
                     print!(
-                        "{}{}",
-                        cursor::Goto((i as u16 + x), (j as u16 + y)),
+                        "{}{}{}",
+                        cursor::Goto(i as u16 + x, j as u16 + y),
+                        color::Fg(color::Reset),
                         color::Bg(color::Reset)
                     );
                 }
@@ -205,4 +256,14 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
         ':' => DIV,
         _ => ZERO,
     }
+}
+
+fn help(nm: &String) {
+    println!("usage : {}", nm);
+    println!("    -s    Set custom symbol");
+    println!("    -c    Set foreground color [0-255] (Ansi value)");
+    println!("    -C    Set background color [0-255] (Ansi value)");
+    println!("    -d    Debug mode");
+    println!("    -h    Display this message");
+    process::exit(1);
 }
