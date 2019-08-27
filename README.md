@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/valebes/rsClock.svg?branch=master)](https://travis-ci.org/valebes/rsClock)
 ![GitHub](https://img.shields.io/github/license/valebes/rsClock.svg)
+[![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
 ![Screenshot](https://i.imgur.com/oyCXhXU.png)
 
@@ -20,11 +21,12 @@ unix@weeb:~$ cargo build --release
 unix@weeb:~$ ./target/release/rsclock
 ```
 ## To-Do
-* [ ] Complete code refactory
+* [ ] Complete code refactory (working on it)
 * [x] Colors support 
 * [ ] Alarms
 * [ ] Config file
-* [ ] Maybe themes support?
+* [ ] Themes support
+* [ ] Documentation
 ## Screenshots
 
 ![Screenshot](https://i.imgur.com/EhrFUvk.png)
