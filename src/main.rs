@@ -252,20 +252,22 @@ fn main() {
                     }
 
                     b'+' => {
-                        if fg_color as i16 + 1 > 255 {
-                            fg_color = 0;
-                        } else {
-                            fg_color = fg_color + 1;
-                        }
+                        fg_color = inc_u8(fg_color);
                         break;
                     }
 
                     b'-' => {
-                        if fg_color as i16 - 1 < 0 {
-                            fg_color = 255;
-                        } else {
-                            fg_color = fg_color - 1;
-                        }
+                        fg_color = dec_u8(fg_color);
+                        break;
+                    }
+
+                    b'.' => {
+                        bg_color = inc_u8(bg_color);
+                        break;
+                    }
+
+                    b',' => {
+                        bg_color = dec_u8(bg_color);
                         break;
                     }
 
@@ -319,4 +321,22 @@ fn help(nm: &String) {
     println!("    -d    Debug mode");
     println!("    -h    Display this message");
     process::exit(1);
+}
+
+fn inc_u8(mut val: u8) -> u8 {
+    if val as i16 + 1 > 255 {
+        val = 0;
+    } else {
+        val = val + 1;
+    }
+    val
+}
+
+fn dec_u8(mut val: u8) -> u8 {
+    if val as i16 - 1 < 0 {
+        val = 255;
+    } else {
+        val = val - 1;
+    }
+    val
 }
