@@ -14,8 +14,6 @@ category = ["command-line-utilities"]
 
 readme = "README.md"
 license = "MIT"
-license-file = "LICENSE"
-
 
 [badges]
 
