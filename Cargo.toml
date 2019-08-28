@@ -1,8 +1,30 @@
 [package]
 name = "rsclock"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["valebes"]
 edition = "2018"
+
+description = "A simple terminal clock written in Rust."
+homepage = "https://github.com/valebes/rsClock"
+repository = "https://github.com/valebes/rsClock"
+
+keywords = ["clock", "terminal", "unixporn"]
+category = ["command-line-utilities"]
+
+
+readme = "README.md"
+license = "MIT"
+
+[badges]
+
+travis-ci = { repository = "<valebes>/<rsClock>", branch = "master" }
+maintenance = { status = "actively-developed" }
+
+
+
+
+
+
 
 [dependencies]
 termion = "*"

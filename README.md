@@ -11,7 +11,7 @@
 ## Introduction
 rsClock is a simple terminal clock.
 
-Now is only a simple demo, I'll add some features in the future.
+Now is in active development, I'll add new features in the future.
 
 ## Build
 ```console
@@ -19,6 +19,17 @@ unix@weeb:~$ git clone https://github.com/valebes/rsClock
 unix@weeb:~$ cd rsClock
 unix@weeb:~$ cargo build --release
 unix@weeb:~$ ./target/release/rsclock
+```
+## Usage
+```console
+usage : rsclock
+    -s    Set custom symbol
+    -f    Set foreground color [0-255] (Ansi value)
+    -b    Set background color [0-255] (Ansi value)
+    -d    Debug mode
+    -c    Center clock
+    -v    Show rsClock version
+    -h    Display this message
 ```
 ## To-Do
 * [ ] Complete code refactory (working on it)
