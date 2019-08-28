@@ -27,5 +27,5 @@ maintenance = { status = "actively-developed" }
 
 
 [dependencies]
-termion = "*"
+termion = "1.5.3"
 chrono = "0.4"
