@@ -1,6 +1,6 @@
 [package]
 name = "rsclock"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["valebes"]
 edition = "2018"
 
@@ -17,7 +17,7 @@ license = "MIT"
 
 [badges]
 
-travis-ci = { repository = "<valebes>/<rsClock>", branch = "master" }
+travis-ci = { repository = "valebes/rsClock", branch = "master" }
 maintenance = { status = "actively-developed" }
 
 

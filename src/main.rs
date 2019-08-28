@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.1";
+const VERSION: &str = "0.1.2";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
