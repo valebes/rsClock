@@ -38,6 +38,10 @@ unix@weeb:~$ usage : rsclock
     		 -v    Show rsClock version
    		 -h    Display this message
 ```
+Use "+" and "-" to change foreground color.
+Use "." and "," to change background color.
+Use "q" to quit the program.
+
 ## To-Do
 * [ ] Complete code refactory (working on it)
 * [x] Colors support 
