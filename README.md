@@ -17,7 +17,7 @@ Now is in active development, I'll add new features in the future.
 From Crates.io :
 
 ```console
-cargo install rsclock
+unix@weeb:~$ cargo install rsclock
 ```
 
 From GitHub :
@@ -29,14 +29,14 @@ unix@weeb:~$ ./target/release/rsclock
 ```
 ## Usage
 ```console
-usage : rsclock
-    -s    Set custom symbol
-    -f    Set foreground color [0-255] (Ansi value)
-    -b    Set background color [0-255] (Ansi value)
-    -d    Debug mode
-    -c    Center clock
-    -v    Show rsClock version
-    -h    Display this message
+unix@weeb:~$ usage : rsclock
+   		 -s    Set custom symbol
+  		 -f    Set foreground color [0-255] (Ansi value)
+   		 -b    Set background color [0-255] (Ansi value)
+ 		 -d    Debug mode
+  		 -c    Center clock
+    		 -v    Show rsClock version
+   		 -h    Display this message
 ```
 ## To-Do
 * [ ] Complete code refactory (working on it)
