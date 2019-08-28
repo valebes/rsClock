@@ -14,6 +14,13 @@ rsClock is a simple terminal clock.
 Now is in active development, I'll add new features in the future.
 
 ## Build
+From Crates.io :
+
+```console
+cargo install rsclock
+```
+
+From GitHub :
 ```console
 unix@weeb:~$ git clone https://github.com/valebes/rsClock
 unix@weeb:~$ cd rsClock
