@@ -39,7 +39,9 @@ unix@weeb:~$ usage : rsclock
    		 -h    Display this message
 ```
 Use "+" and "-" to change foreground color.
+
 Use "." and "," to change background color.
+
 Use "q" to quit the program.
 
 ## To-Do
