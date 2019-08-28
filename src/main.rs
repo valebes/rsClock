@@ -13,8 +13,7 @@
 
 */
 
-extern crate chrono;
-extern crate termion;
+const VERSION: &str = "0.1.1";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -112,6 +111,9 @@ const ERR: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
+extern crate chrono;
+extern crate termion;
+
 use chrono::prelude::*;
 
 use termion::{async_stdin, clear, color, cursor, raw::IntoRawMode, raw::RawTerminal};
@@ -137,6 +139,21 @@ fn resize_watcher<W: Write>(size: (u16, u16), stdout: &mut RawTerminal<W>) -> bo
     }
 }
 
+fn center(x_mod: u16, y_mod: u16) -> (u16, u16) {
+    let size = termion::terminal_size().unwrap();
+    let mut x = 1;
+    let mut y = 1;
+    if (size.0 as i32)/2 -16 + x_mod as i32 > 0 { 
+        x = (size.0)/2 -16 + x_mod;
+    }
+    if (size.1 as i32)/2 -3 + y_mod as i32 > 0 {
+        y = (size.1)/2 -3  + y_mod;
+    }
+    (x,y)
+}
+
+    
+
 fn symbol(ch: char) -> [[bool; 6]; 5] {
     match ch {
         '1' => ONE,
@@ -157,9 +174,11 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
 fn help(nm: &String) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
-    println!("    -c    Set foreground color [0-255] (Ansi value)");
-    println!("    -C    Set background color [0-255] (Ansi value)");
+    println!("    -f    Set foreground color [0-255] (Ansi value)");
+    println!("    -b    Set background color [0-255] (Ansi value)");
     println!("    -d    Debug mode");
+    println!("    -c    Center clock");
+    println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
     process::exit(1);
 }
@@ -192,17 +211,18 @@ fn main() {
     let mut sym = String::from("█"); // Symbol
     let mut fg_color = 1; // Fg color
     let mut bg_color = 1; // Fg color
+    let mut center_clock = false; // Center clock (Default: no)
 
-    /* Default position */
-    let x = 3;
-    let y = 2;
+    /* Default position modifier */
+    let x_mod = 1;
+    let y_mod = 1;
 
     /* Args parsing */
     for i in 1..args.len() {
-        if &args[i] == &"-c".to_string() {
+        if &args[i] == &"-f".to_string() {
             // fg_color
             if args.len() <= i + 1 {
-                println!("Invalid option for -C");
+                println!("Invalid option for -f");
                 help(&nm);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
@@ -210,16 +230,16 @@ fn main() {
                 match num {
                     Ok(val) => fg_color = val,
                     Err(e) => {
-                        println!("Invalid option for -c: {}", e);
+                        println!("Invalid option for -f: {}", e);
                         help(&nm);
                     }
                 }
             }
         }
-        if &args[i] == &"-C".to_string() {
+        if &args[i] == &"-b".to_string() {
             // bg_color
             if args.len() <= i + 1 {
-                println!("Invalid option for -C");
+                println!("Invalid option for -b");
                 help(&nm);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
@@ -227,7 +247,7 @@ fn main() {
                 match num {
                     Ok(val) => bg_color = val,
                     Err(e) => {
-                        println!("Invalid option for -C: {}", e);
+                        println!("Invalid option for -b: {}", e);
                         help(&nm);
                     }
                 }
@@ -251,6 +271,14 @@ fn main() {
                 sym = String::from(&ch.to_string());
             }
         }
+        if &args[i] == &"-v".to_string() {
+            // Priny rsClock version
+            println!("rsClock {}", VERSION);
+            process::exit(1);
+        }
+        if &args[i] == &"-c".to_string() {
+            center_clock = true;
+        }
     }
 
     /* Setting format */
@@ -263,7 +291,16 @@ fn main() {
     /* Prepare stdout and stdin */
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut stdin = async_stdin().bytes();
+    
+    let mut x = 2;
+    let mut y = 2;
 
+    if center_clock {
+        let pos = center(x_mod, y_mod);
+        x = pos.0;
+        y = pos.1;
+    }
+    
     /* Start loop */
     loop {
         let size = termion::terminal_size().unwrap();
@@ -287,9 +324,9 @@ fn main() {
         for c in time.chars() {
             hour.push(symbol(c));
         }
-
+             
         let mut pos_x = x;
-        let mut pos_y = y;
+        let pos_y = y;
 
         /* Draw time and print date */
         for digit in hour {
@@ -363,6 +400,11 @@ fn main() {
 
             /* Watch terminal size */
             if resize_watcher(size, &mut stdout) {
+                if center_clock {
+                    let new_size = center(x_mod, y_mod);
+                    x = new_size.0;
+                    y = new_size.1;
+                }
                 break; // -> Re-draw
             }
             thread::sleep(refresh); // Sleep
