@@ -139,15 +139,15 @@ fn resize_watcher<W: Write>(size: (u16, u16), stdout: &mut RawTerminal<W>) -> bo
     }
 }
 
-fn center(x_mod: u16, y_mod: u16) -> (u16, u16) {
+fn center(x_mod: u16, y_mod: u16, x_size: u16, y_size: u16) -> (u16, u16) {
     let size = termion::terminal_size().unwrap();
     let mut x = 1;
     let mut y = 1;
-    if (size.0 as i32)/2 -16 + x_mod as i32 > 0 { 
-        x = (size.0)/2 -16 + x_mod;
+    if (size.0 as i32)/2 -(x_size as i32)/2 + x_mod as i32 > 0 { 
+        x = (size.0)/2 -(x_size/2) + x_mod;
     }
-    if (size.1 as i32)/2 -3 + y_mod as i32 > 0 {
-        y = (size.1)/2 -3  + y_mod;
+    if (size.1 as i32)/2 -(y_size as i32)/2 + y_mod as i32 > 0 {
+        y = (size.1)/2 -(y_size/2) + y_mod;
     }
     (x,y)
 }
@@ -174,6 +174,7 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
 fn help(nm: &String) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
+    println!("    -S    Display seconds");
     println!("    -f    Set foreground color [0-255] (Ansi value)");
     println!("    -b    Set background color [0-255] (Ansi value)");
     println!("    -d    Debug mode");
@@ -212,11 +213,16 @@ fn main() {
     let mut fg_color = 1; // Fg color
     let mut bg_color = 1; // Fg color
     let mut center_clock = false; // Center clock (Default: no)
+    let mut seconds = false; // Display seconds (Default: no)
 
     /* Default position modifier */
     let x_mod = 1;
     let y_mod = 1;
 
+    /* Default date size */
+    let mut x_size = 32;
+    let mut y_size = 7;
+    
     /* Args parsing */
     for i in 1..args.len() {
         if &args[i] == &"-f".to_string() {
@@ -271,6 +277,10 @@ fn main() {
                 sym = String::from(&ch.to_string());
             }
         }
+        if &args[i] == &"-S".to_string() {
+            // Display seconds
+            seconds = true;
+        }
         if &args[i] == &"-v".to_string() {
             // Priny rsClock version
             println!("rsClock {}", VERSION);
@@ -282,7 +292,14 @@ fn main() {
     }
 
     /* Setting format */
-    let clock: &str = "%H:%M";
+    let mut format = "%H:%M".to_string();
+
+    if seconds {
+        format = format + &":%S".to_string();
+        x_size = x_size + 20;
+    }
+
+    let clock: &str = format.as_str();
     let date: &str = "%F";
 
     /* Setting refresh value */
@@ -296,7 +313,7 @@ fn main() {
     let mut y = 2;
 
     if center_clock {
-        let pos = center(x_mod, y_mod);
+        let pos = center(x_mod, y_mod, x_size, y_size);
         x = pos.0;
         y = pos.1;
     }
@@ -355,7 +372,7 @@ fn main() {
             }
             pos_x = pos_x + 7;
         }
-        write!(stdout, "{}{}", cursor::Goto(12 + x, 6 + y), d_date).unwrap();
+        write!(stdout, "{}{}", cursor::Goto((x_size/2) -4 + x, 6 + y), d_date).unwrap();
         stdout.flush().unwrap();
 
         /* Wait for the next cycle */
@@ -401,7 +418,7 @@ fn main() {
             /* Watch terminal size */
             if resize_watcher(size, &mut stdout) {
                 if center_clock {
-                    let new_size = center(x_mod, y_mod);
+                    let new_size = center(x_mod, y_mod, x_size, y_size);
                     x = new_size.0;
                     y = new_size.1;
                 }
