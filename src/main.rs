@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.3";
+const VERSION: &str = "0.1.4";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -143,16 +143,14 @@ fn center(x_mod: u16, y_mod: u16, x_size: u16, y_size: u16) -> (u16, u16) {
     let size = termion::terminal_size().unwrap();
     let mut x = 1;
     let mut y = 1;
-    if (size.0 as i32)/2 -(x_size as i32)/2 + x_mod as i32 > 0 { 
-        x = (size.0)/2 -(x_size/2) + x_mod;
+    if (size.0 as i32) / 2 - (x_size as i32) / 2 + x_mod as i32 > 0 {
+        x = (size.0) / 2 - (x_size / 2) + x_mod;
     }
-    if (size.1 as i32)/2 -(y_size as i32)/2 + y_mod as i32 > 0 {
-        y = (size.1)/2 -(y_size/2) + y_mod;
+    if (size.1 as i32) / 2 - (y_size as i32) / 2 + y_mod as i32 > 0 {
+        y = (size.1) / 2 - (y_size / 2) + y_mod;
     }
-    (x,y)
+    (x, y)
 }
-
-    
 
 fn symbol(ch: char) -> [[bool; 6]; 5] {
     match ch {
@@ -202,6 +200,43 @@ fn dec_u8(mut val: u8) -> u8 {
     val
 }
 
+fn draw<W: Write>(
+    hour: Vec<[[bool; 6]; 5]>,
+    sym: String,
+    mut pos_x: u16,
+    pos_y: u16,
+    fg_color: u8,
+    bg_color: u8,
+    stdout: &mut RawTerminal<W>,
+) {
+    for digit in hour {
+        for j in 0..digit.len() {
+            for i in 0..digit[j].len() {
+                if digit[j][i] == true {
+                    write!(
+                        stdout,
+                        "{}{}{}{}",
+                        cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
+                        color::Fg(color::AnsiValue(fg_color)),
+                        color::Bg(color::AnsiValue(bg_color)),
+                        sym
+                    )
+                    .unwrap();
+                }
+                write!(
+                    stdout,
+                    "{}{}{}",
+                    cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
+                    color::Fg(color::Reset),
+                    color::Bg(color::Reset)
+                )
+                .unwrap();
+            }
+        }
+        pos_x = pos_x + 7;
+    }
+}
+
 /* Main */
 
 fn main() {
@@ -220,9 +255,9 @@ fn main() {
     let y_mod = 1;
 
     /* Default date size */
-    let mut x_size = 32;
+    let mut x_size = 34;
     let mut y_size = 7;
-    
+
     /* Args parsing */
     for i in 1..args.len() {
         if &args[i] == &"-f".to_string() {
@@ -296,7 +331,7 @@ fn main() {
 
     if seconds {
         format = format + &":%S".to_string();
-        x_size = x_size + 20;
+        x_size = x_size + 21;
     }
 
     let clock: &str = format.as_str();
@@ -308,7 +343,8 @@ fn main() {
     /* Prepare stdout and stdin */
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut stdin = async_stdin().bytes();
-    
+    let mut size = termion::terminal_size().unwrap();
+
     let mut x = 2;
     let mut y = 2;
 
@@ -317,10 +353,9 @@ fn main() {
         x = pos.0;
         y = pos.1;
     }
-    
+
     /* Start loop */
     loop {
-        let size = termion::terminal_size().unwrap();
         write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
 
         // Display terminal size only in debug mode
@@ -341,38 +376,16 @@ fn main() {
         for c in time.chars() {
             hour.push(symbol(c));
         }
-             
-        let mut pos_x = x;
-        let pos_y = y;
 
         /* Draw time and print date */
-        for digit in hour {
-            for j in 0..digit.len() {
-                for i in 0..digit[j].len() {
-                    if digit[j][i] == true {
-                        write!(
-                            stdout,
-                            "{}{}{}{}",
-                            cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
-                            color::Fg(color::AnsiValue(fg_color)),
-                            color::Bg(color::AnsiValue(bg_color)),
-                            sym
-                        )
-                        .unwrap();
-                    }
-                    write!(
-                        stdout,
-                        "{}{}{}",
-                        cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
-                        color::Fg(color::Reset),
-                        color::Bg(color::Reset)
-                    )
-                    .unwrap();
-                }
-            }
-            pos_x = pos_x + 7;
-        }
-        write!(stdout, "{}{}", cursor::Goto((x_size/2) -4 + x, 6 + y), d_date).unwrap();
+        draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
+        write!(
+            stdout,
+            "{}{}",
+            cursor::Goto((x_size/2) - (d_date.len() as u16)/2 + x, 6 + y),
+            d_date
+        )
+        .unwrap();
         stdout.flush().unwrap();
 
         /* Wait for the next cycle */
@@ -422,6 +435,7 @@ fn main() {
                     x = new_size.0;
                     y = new_size.1;
                 }
+                size = termion::terminal_size().unwrap();
                 break; // -> Re-draw
             }
             thread::sleep(refresh); // Sleep
