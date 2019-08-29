@@ -45,7 +45,7 @@ Use "." and "," to change background color.
 Use "q" to quit the program.
 
 ## To-Do
-* [ ] Complete code refactory (working on it)
+* [ ] Complete code refactoring (working on it)
 * [x] Colors support 
 * [ ] Alarms
 * [ ] Config file
