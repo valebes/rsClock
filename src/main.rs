@@ -176,7 +176,7 @@ fn help(nm: &String) {
     println!("    -f    Set foreground color [0-255] (Ansi value)");
     println!("    -b    Set background color [0-255] (Ansi value)");
     println!("    -d    Debug mode");
-    println!("    -c    Center clock");
+    println!("    -c    Center the clock");
     println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
     process::exit(1);
