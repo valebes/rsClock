@@ -52,12 +52,4 @@ Use "q" to quit the program.
 * [ ] Config file
 * [ ] Themes support
 * [ ] Documentation
-## Screenshots
-
-![Screenshot](https://i.imgur.com/EhrFUvk.png)
-![Example1](https://i.imgur.com/fyDFm3a.png)
-![Example2](https://i.imgur.com/wS4yNp0.png)
-![Example3](https://i.imgur.com/7gZbS2D.png)
-![Example4](https://i.imgur.com/M5tMMqI.png)
-
 #### Work in progress
