@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/github/license/valebes/rsClock.svg)
 [![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
-![Screenshot](https://i.imgur.com/oyCXhXU.png)
+![Screenshot](https://i.imgur.com/CuirrjG.png)
 
 ## Introduction
 rsClock is a simple terminal clock.
@@ -55,8 +55,9 @@ Use "q" to quit the program.
 ## Screenshots
 
 ![Screenshot](https://i.imgur.com/EhrFUvk.png)
-![Screenshot](https://i.imgur.com/CuirrjG.png)
-![Screenshot](https://i.imgur.com/rhaiacW.png)
-![Screenshot](https://i.imgur.com/knBYqPb.png)
+![Example1](https://i.imgur.com/fyDFm3a.png)
+![Example2](https://i.imgur.com/wS4yNp0.png)
+![Example3](https://i.imgur.com/7gZbS2D.png)
+![Example4](https://i.imgur.com/M5tMMqI.png)
 
 #### Work in progress
