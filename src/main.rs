@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.4";
+const VERSION: &str = "0.1.5-prerelease";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -382,7 +382,7 @@ fn main() {
         write!(
             stdout,
             "{}{}",
-            cursor::Goto((x_size/2) - (d_date.len() as u16)/2 + x, 6 + y),
+            cursor::Goto((x_size / 2) - (d_date.len() as u16) / 2 + x, 6 + y),
             d_date
         )
         .unwrap();
