@@ -1,6 +1,6 @@
 [package]
 name = "rsclock"
-version = "0.1.4"
+version = "0.1.5-prerelease"
 authors = ["valebes"]
 edition = "2018"
 
@@ -20,11 +20,11 @@ license = "MIT"
 travis-ci = { repository = "valebes/rsClock", branch = "master" }
 maintenance = { status = "actively-developed" }
 
-
-
-
-
-
+[profile.release]
+opt-level = 'z'  # optimize size
+lto = true
+codegen-units = 1
+panic = 'abort'
 
 [dependencies]
 termion = "1.5.3"
