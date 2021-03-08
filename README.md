@@ -11,7 +11,8 @@
 ## Introduction
 rsClock is a simple terminal clock.
 
-Now is in active development, I'll add new features in the future.
+Now this project is paused.
+I'll add new features in the future.
 
 ## Build
 From Crates.io :
