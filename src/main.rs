@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.5.1-prerelease";
+const VERSION: &str = "0.1.6";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -222,15 +222,17 @@ fn draw<W: Write>(
                         sym
                     )
                     .unwrap();
+                } else {
+                    write!(
+                        stdout,
+                        "{}{}{}{}",
+                        cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
+                        color::Fg(color::Reset),
+                        color::Bg(color::Reset),
+                        " "
+                    )
+                    .unwrap();
                 }
-                write!(
-                    stdout,
-                    "{}{}{}",
-                    cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
-                    color::Fg(color::Reset),
-                    color::Bg(color::Reset)
-                )
-                .unwrap();
             }
         }
         pos_x = pos_x + 7;
@@ -354,10 +356,9 @@ fn main() {
         y = pos.1;
     }
 
+    write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
     /* Start loop */
     loop {
-        write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
-
         // Display terminal size only in debug mode
         if debug {
             write!(
@@ -381,8 +382,10 @@ fn main() {
         draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
         write!(
             stdout,
-            "{}{}",
+            "{}{}{}{}",
             cursor::Goto((x_size / 2) - (d_date.len() as u16) / 2 + x, 6 + y),
+            color::Fg(color::Reset),
+            color::Bg(color::Reset),
             d_date
         )
         .unwrap();
