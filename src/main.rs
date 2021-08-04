@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.5-prerelease";
+const VERSION: &str = "0.1.5.1-prerelease";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -256,7 +256,7 @@ fn main() {
 
     /* Default date size */
     let mut x_size = 34;
-    let mut y_size = 7;
+    let y_size = 7;
 
     /* Args parsing */
     for i in 1..args.len() {
