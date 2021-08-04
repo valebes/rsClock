@@ -11,7 +11,7 @@
 ## Introduction
 rsClock is a simple terminal clock.
 
-Now this project is paused.
+Now this project is active again.
 I'll add new features in the future.
 
 ## Build
