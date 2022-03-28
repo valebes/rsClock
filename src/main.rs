@@ -103,6 +103,14 @@ const DIV: [[bool; 6]; 5] = [
     [false, false, false, false, false, false],
 ];
 
+const DASH: [[bool; 6]; 5] = [
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, true, true, true, true, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+];
+
 const ERR: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
     [true, true, false, false, false, false],
@@ -165,6 +173,7 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
         '9' => NINE,
         '0' => ZERO,
         ':' => DIV,
+        '-' => DASH,
         _ => ERR,
     }
 }
@@ -173,6 +182,8 @@ fn help(nm: &String) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
     println!("    -S    Display seconds");
+    println!("    -T    Display only time");
+    println!("    -D    Display only date");
     println!("    -f    Set foreground color [0-255] (Ansi value)");
     println!("    -b    Set background color [0-255] (Ansi value)");
     println!("    -d    Debug mode");
@@ -251,6 +262,9 @@ fn main() {
     let mut bg_color = 1; // Fg color
     let mut center_clock = false; // Center clock (Default: no)
     let mut seconds = false; // Display seconds (Default: no)
+    let mut time_only = false;
+    let mut date_only = false;
+
 
     /* Default position modifier */
     let x_mod = 1;
@@ -326,6 +340,13 @@ fn main() {
         if &args[i] == &"-c".to_string() {
             center_clock = true;
         }
+        if &args[i] == &"-T".to_string() {
+            time_only = true;
+        }
+        if &args[i] == &"-D".to_string() {
+            date_only = true;
+        }
+        
     }
 
     /* Setting format */
@@ -374,22 +395,44 @@ fn main() {
         let time = Local::now().format(clock).to_string(); // get time
         let d_date = Local::now().format(date).to_string(); // get date
         let mut hour: Vec<[[bool; 6]; 5]> = Vec::new();
-        for c in time.chars() {
-            hour.push(symbol(c));
+        
+        if date_only == false {
+            for c in time.chars() {
+                hour.push(symbol(c));
+            }
+        } else {
+            for c in d_date.chars() {
+                hour.push(symbol(c));
+            }
         }
 
         /* Draw time and print date */
         draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
-        write!(
-            stdout,
-            "{}{}{}{}",
-            cursor::Goto((x_size / 2) - (d_date.len() as u16) / 2 + x, 6 + y),
-            color::Fg(color::Reset),
-            color::Bg(color::Reset),
-            d_date
-        )
-        .unwrap();
+        
+        if (time_only == false) && (date_only == false) {
+            write!(
+                stdout,
+                "{}{}{}{}",
+                cursor::Goto((x_size / 2) - (d_date.len() as u16) / 2 + x, 6 + y),
+                color::Fg(color::Reset),
+                color::Bg(color::Reset),
+                d_date,
+            )
+            .unwrap();
+        } else {
+            write!(
+                stdout,
+                "{}{}{}",
+                cursor::Goto((x_size / 2) - (d_date.len() as u16) / 2 + x, 6 + y),
+                color::Fg(color::Reset),
+                color::Bg(color::Reset),
+            )
+            .unwrap();
+        }
+
+        
         stdout.flush().unwrap();
+
 
         /* Wait for the next cycle */
         let mut exit = 0;
