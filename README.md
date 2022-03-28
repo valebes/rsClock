@@ -31,14 +31,16 @@ unix@weeb:~$ ./target/release/rsclock
 ## Usage
 ```console
 unix@weeb:~$ usage : rsclock
-   		 -s    Set custom symbol
-		 -S    Display seconds
-  		 -f    Set foreground color [0-255] (Ansi value)
-   		 -b    Set background color [0-255] (Ansi value)
- 		 -d    Debug mode
-  		 -c    Center the clock
-    		 -v    Show rsClock version
-   		 -h    Display this message
+    -s    Set custom symbol
+    -S    Display seconds
+    -T    Display only time
+    -D    Display only date
+    -f    Set foreground color [0-255] (Ansi value)
+    -b    Set background color [0-255] (Ansi value)
+    -d    Debug mode
+    -c    Center the clock
+    -v    Show rsClock version
+    -h    Display this message
 ```
 Use "+" and "-" to change foreground color.
 
