@@ -3,7 +3,7 @@
 </p>
 
 [![Build Status](https://travis-ci.org/valebes/rsClock.svg?branch=master)](https://travis-ci.org/valebes/rsClock)
-![GitHub](https://img.shields.io/github/license/valebes/rsClock.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Screenshot](https://i.imgur.com/CuirrjG.png)
 
