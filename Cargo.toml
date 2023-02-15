@@ -28,4 +28,4 @@ panic = 'abort'
 
 [dependencies]
 termion = "1.5.6"
-chrono = "0.4.19"
+chrono = "0.4.23"
