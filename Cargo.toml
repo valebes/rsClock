@@ -16,8 +16,6 @@ readme = "README.md"
 license = "MIT"
 
 [badges]
-
-travis-ci = { repository = "valebes/rsClock", branch = "master" }
 maintenance = { status = "actively-developed" }
 
 [profile.release]
@@ -27,5 +25,5 @@ codegen-units = 1
 panic = 'abort'
 
 [dependencies]
-termion = "1.5.6"
-chrono = "0.4.23"
+termion = "2.0.1"
+chrono = "0.4.24"

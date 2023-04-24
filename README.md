@@ -2,7 +2,7 @@
   <img alt="Logo" width="454" src="https://i.imgur.com/1TF28pq.png">
 </p>
 
-[![Build Status](https://travis-ci.org/valebes/rsClock.svg?branch=master)](https://travis-ci.org/valebes/rsClock)
+[![Rust](https://github.com/valebes/rsClock/actions/workflows/rust.yml/badge.svg?branch=master)](https://github.com/valebes/rsClock/actions/workflows/rust.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Screenshot](https://i.imgur.com/CuirrjG.png)
