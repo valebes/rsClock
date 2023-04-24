@@ -218,11 +218,12 @@ fn help(nm: &String) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
     println!("    -S    Display seconds");
-    println!("    -t    Use 12-hour format");
     println!("    -T    Display only time");
     println!("    -D    Display only date");
     println!("    -f    Set foreground color [0-255] (Ansi value)");
     println!("    -b    Set background color [0-255] (Ansi value)");
+    println!("    -u    Use 12-hour format (blocky AM/PM)");
+    println!("    -U    Use 12-hour format (dateline AM/PM)");
     println!("    -d    Debug mode");
     println!("    -c    Center the clock");
     println!("    -v    Show rsClock version");
@@ -361,11 +362,11 @@ fn main() {
         if &args[i] == &"-c".to_string() {
             center_clock = true;
         }
-        if &args[i] == &"-U".to_string() {
-            twelve_hour_block = true;
-        }
         if &args[i] == &"-u".to_string() {
             twelve_hour_line = true;
+        }
+        if &args[i] == &"-U".to_string() {
+            twelve_hour_block = true;
         }
         if &args[i] == &"-T".to_string() {
             time_only = true;
@@ -377,7 +378,7 @@ fn main() {
     }
 
     /* Setting format */
-    let mut format = if twelve_hour_block {
+    let mut format = if twelve_hour_block || twelve_hour_line {
         "%I:%M".to_string()
     } else {
         "%H:%M".to_string()
@@ -394,7 +395,11 @@ fn main() {
     }
 
     let clock: &str = format.as_str();
-    let date: &str = "%F";
+    let date: &str = if twelve_hour_line {
+        "%F %p"
+    } else {
+        "%F"
+    };
 
     /* Setting refresh value */
     let refresh = Duration::from_millis(100);
