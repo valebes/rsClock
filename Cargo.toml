@@ -16,8 +16,6 @@ readme = "README.md"
 license = "MIT"
 
 [badges]
-
-travis-ci = { repository = "valebes/rsClock", branch = "master" }
 maintenance = { status = "actively-developed" }
 
 [profile.release]
