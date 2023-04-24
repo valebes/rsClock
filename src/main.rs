@@ -126,6 +126,7 @@ const SPACE: [[bool; 6]; 5] = [
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
 ];
+
 const A: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
