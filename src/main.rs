@@ -266,7 +266,7 @@ fn draw<W: Write>(
                 }
             }
         }
-        pos_x = pos_x + 7;
+        pos_x += 7;
     }
 }
 
@@ -286,7 +286,6 @@ fn main() {
     let mut date_only = false;
     let mut twelve_hour_block = false;
     let mut twelve_hour_line = false;
-
 
     /* Default position modifier */
     let x_mod = 1;
@@ -374,7 +373,6 @@ fn main() {
         if &args[i] == &"-D".to_string() {
             date_only = true;
         }
-        
     }
 
     /* Setting format */
@@ -385,21 +383,17 @@ fn main() {
     };
 
     if seconds {
-        format = format + &":%S".to_string();
-        x_size = x_size + 21;
+        format += ":%S";
+        x_size += 21;
     }
 
     if twelve_hour_block {
-        format = format + &" %p".to_string();
-        x_size = x_size + 21;
+        format += " %p";
+        x_size += 21;
     }
 
     let clock: &str = format.as_str();
-    let date: &str = if twelve_hour_line {
-        "%F %p"
-    } else {
-        "%F"
-    };
+    let date: &str = if twelve_hour_line { "%F %p" } else { "%F" };
 
     /* Setting refresh value */
     let refresh = Duration::from_millis(100);
@@ -436,8 +430,8 @@ fn main() {
         let time = Local::now().format(clock).to_string(); // get time
         let d_date = Local::now().format(date).to_string(); // get date
         let mut hour: Vec<[[bool; 6]; 5]> = Vec::new();
-        
-        if date_only == false {
+
+        if !date_only {
             for c in time.chars() {
                 hour.push(symbol(c));
             }
@@ -449,8 +443,8 @@ fn main() {
 
         /* Draw time and print date */
         draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
-        
-        if (time_only == false) && (date_only == false) {
+
+        if !time_only && !date_only {
             write!(
                 stdout,
                 "{}{}{}{}",
@@ -471,9 +465,7 @@ fn main() {
             .unwrap();
         }
 
-        
         stdout.flush().unwrap();
-
 
         /* Wait for the next cycle */
         let mut exit = 0;
