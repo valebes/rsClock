@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.8";
+const VERSION: &str = "0.1.9";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -119,6 +119,38 @@ const ERR: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
+const SPACE: [[bool; 6]; 5] = [
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+];
+
+const A: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, false, false, true, true],
+];
+
+const P: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, true, true, true, true],
+    [true, true, false, false, false, false],
+    [true, true, false, false, false, false],
+];
+
+const M: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+];
+
 extern crate chrono;
 extern crate termion;
 
@@ -174,6 +206,10 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
         '0' => ZERO,
         ':' => DIV,
         '-' => DASH,
+        ' ' => SPACE,
+        'A' => A,
+        'P' => P,
+        'M' => M,
         _ => ERR,
     }
 }
@@ -186,6 +222,8 @@ fn help(nm: &String) {
     println!("    -D    Display only date");
     println!("    -f    Set foreground color [0-255] (Ansi value)");
     println!("    -b    Set background color [0-255] (Ansi value)");
+    println!("    -u    Use 12-hour format (blocky AM/PM)");
+    println!("    -U    Use 12-hour format (dateline AM/PM)");
     println!("    -d    Debug mode");
     println!("    -c    Center the clock");
     println!("    -v    Show rsClock version");
@@ -228,7 +266,7 @@ fn draw<W: Write>(
                 }
             }
         }
-        pos_x = pos_x + 7;
+        pos_x += 7;
     }
 }
 
@@ -246,7 +284,8 @@ fn main() {
     let mut seconds = false; // Display seconds (Default: no)
     let mut time_only = false;
     let mut date_only = false;
-
+    let mut twelve_hour_block = false;
+    let mut twelve_hour_line = false;
 
     /* Default position modifier */
     let x_mod = 1;
@@ -322,25 +361,39 @@ fn main() {
         if &args[i] == &"-c".to_string() {
             center_clock = true;
         }
+        if &args[i] == &"-u".to_string() {
+            twelve_hour_line = true;
+        }
+        if &args[i] == &"-U".to_string() {
+            twelve_hour_block = true;
+        }
         if &args[i] == &"-T".to_string() {
             time_only = true;
         }
         if &args[i] == &"-D".to_string() {
             date_only = true;
         }
-        
     }
 
     /* Setting format */
-    let mut format = "%H:%M".to_string();
+    let mut format = if twelve_hour_block || twelve_hour_line {
+        "%I:%M".to_string()
+    } else {
+        "%H:%M".to_string()
+    };
 
     if seconds {
-        format = format + &":%S".to_string();
-        x_size = x_size + 21;
+        format += ":%S";
+        x_size += 21;
+    }
+
+    if twelve_hour_block {
+        format += " %p";
+        x_size += 21;
     }
 
     let clock: &str = format.as_str();
-    let date: &str = "%F";
+    let date: &str = if twelve_hour_line { "%F %p" } else { "%F" };
 
     /* Setting refresh value */
     let refresh = Duration::from_millis(100);
@@ -377,8 +430,8 @@ fn main() {
         let time = Local::now().format(clock).to_string(); // get time
         let d_date = Local::now().format(date).to_string(); // get date
         let mut hour: Vec<[[bool; 6]; 5]> = Vec::new();
-        
-        if date_only == false {
+
+        if !date_only {
             for c in time.chars() {
                 hour.push(symbol(c));
             }
@@ -390,8 +443,8 @@ fn main() {
 
         /* Draw time and print date */
         draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
-        
-        if (time_only == false) && (date_only == false) {
+
+        if !time_only && !date_only {
             write!(
                 stdout,
                 "{}{}{}{}",
@@ -412,9 +465,7 @@ fn main() {
             .unwrap();
         }
 
-        
         stdout.flush().unwrap();
-
 
         /* Wait for the next cycle */
         let mut exit = 0;
