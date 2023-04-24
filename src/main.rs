@@ -283,7 +283,8 @@ fn main() {
     let mut seconds = false; // Display seconds (Default: no)
     let mut time_only = false;
     let mut date_only = false;
-    let mut twelve_hour = false;
+    let mut twelve_hour_block = false;
+    let mut twelve_hour_line = false;
 
 
     /* Default position modifier */
@@ -360,8 +361,11 @@ fn main() {
         if &args[i] == &"-c".to_string() {
             center_clock = true;
         }
-        if &args[i] == &"-t".to_string() {
-            twelve_hour = true;
+        if &args[i] == &"-U".to_string() {
+            twelve_hour_block = true;
+        }
+        if &args[i] == &"-u".to_string() {
+            twelve_hour_line = true;
         }
         if &args[i] == &"-T".to_string() {
             time_only = true;
@@ -373,7 +377,7 @@ fn main() {
     }
 
     /* Setting format */
-    let mut format = if twelve_hour {
+    let mut format = if twelve_hour_block {
         "%I:%M".to_string()
     } else {
         "%H:%M".to_string()
@@ -384,7 +388,7 @@ fn main() {
         x_size = x_size + 21;
     }
 
-    if twelve_hour {
+    if twelve_hour_block {
         format = format + &" %p".to_string();
         x_size = x_size + 21;
     }
