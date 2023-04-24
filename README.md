@@ -32,11 +32,12 @@ unix@weeb:~$ ./target/release/rsclock
 unix@weeb:~$ usage : rsclock
     -s    Set custom symbol
     -S    Display seconds
-    -t    Use 12-hour format
     -T    Display only time
     -D    Display only date
     -f    Set foreground color [0-255] (Ansi value)
     -b    Set background color [0-255] (Ansi value)
+    -u    Use 12-hour format (blocky AM/PM)
+    -U    Use 12-hour format (dateline AM/PM)
     -d    Debug mode
     -c    Center the clock
     -v    Show rsClock version
