@@ -372,10 +372,19 @@ fn main() {
     }
 
     /* Setting format */
-    let mut format = "%H:%M".to_string();
+    let mut format = if twelve_hour {
+        "%I:%M".to_string()
+    } else {
+        "%H:%M".to_string()
+    };
 
     if seconds {
         format = format + &":%S".to_string();
+        x_size = x_size + 21;
+    }
+
+    if twelve_hour {
+        format = format + &" %p".to_string();
         x_size = x_size + 21;
     }
 
