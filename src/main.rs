@@ -119,6 +119,37 @@ const ERR: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
+const SPACE: [[bool; 6]; 5] = [
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+];
+const A: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, false, false, true, true],
+];
+
+const P: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, false, true, true],
+    [true, true, true, true, true, true],
+    [true, true, false, false, false, false],
+    [true, true, false, false, false, false],
+];
+
+const M: [[bool; 6]; 5] = [
+    [true, true, true, true, true, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+    [true, true, false, true, false, true],
+];
+
 extern crate chrono;
 extern crate termion;
 
@@ -174,6 +205,10 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
         '0' => ZERO,
         ':' => DIV,
         '-' => DASH,
+        ' ' => SPACE,
+        'A' => A,
+        'P' => P,
+        'M' => M,
         _ => ERR,
     }
 }
@@ -182,6 +217,7 @@ fn help(nm: &String) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
     println!("    -S    Display seconds");
+    println!("    -t    Use 12-hour format");
     println!("    -T    Display only time");
     println!("    -D    Display only date");
     println!("    -f    Set foreground color [0-255] (Ansi value)");
@@ -246,6 +282,7 @@ fn main() {
     let mut seconds = false; // Display seconds (Default: no)
     let mut time_only = false;
     let mut date_only = false;
+    let mut twelve_hour = false;
 
 
     /* Default position modifier */
@@ -321,6 +358,9 @@ fn main() {
         }
         if &args[i] == &"-c".to_string() {
             center_clock = true;
+        }
+        if &args[i] == &"-t".to_string() {
+            twelve_hour = true;
         }
         if &args[i] == &"-T".to_string() {
             time_only = true;
