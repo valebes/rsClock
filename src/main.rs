@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.7";
+const VERSION: &str = "0.1.8";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -191,24 +191,6 @@ fn help(nm: &String) {
     println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
     process::exit(1);
-}
-
-fn inc_u8(mut val: u8) -> u8 {
-    if val as i16 + 1 > 255 {
-        val = 0;
-    } else {
-        val = val + 1;
-    }
-    val
-}
-
-fn dec_u8(mut val: u8) -> u8 {
-    if val as i16 - 1 < 0 {
-        val = 255;
-    } else {
-        val = val - 1;
-    }
-    val
 }
 
 fn draw<W: Write>(
@@ -448,25 +430,25 @@ fn main() {
 
                     b'+' => {
                         // Change fg +
-                        fg_color = inc_u8(fg_color);
+                        fg_color = fg_color.wrapping_add(1);
                         break;
                     }
 
                     b'-' => {
                         // Change fg -
-                        fg_color = dec_u8(fg_color);
+                        fg_color = fg_color.wrapping_sub(1);
                         break;
                     }
 
                     b'.' => {
                         // Change bg +
-                        bg_color = inc_u8(bg_color);
+                        bg_color = bg_color.wrapping_add(1);
                         break;
                     }
 
                     b',' => {
                         // Change bg -
-                        bg_color = dec_u8(bg_color);
+                        bg_color = bg_color.wrapping_sub(1);
                         break;
                     }
 
