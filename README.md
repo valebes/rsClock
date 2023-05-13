@@ -49,11 +49,6 @@ Use "." and "," to change background color.
 
 Use "q" to quit the program.
 
-## To-Do
-* [ ] Complete code refactoring (working on it)
-* [x] Colors support 
-* [ ] Alarms
-* [ ] Config file
-* [ ] Themes support
-* [ ] Documentation
-#### Work in progress
+## Installation
+[![Packaging status](https://repology.org/badge/vertical-allrepos/rsclock.svg)](https://repology.org/project/rsclock/versions)
+
