@@ -9,7 +9,7 @@ homepage = "https://github.com/valebes/rsClock"
 repository = "https://github.com/valebes/rsClock"
 
 keywords = ["clock", "terminal", "unixporn"]
-category = ["command-line-utilities"]
+categories = ["command-line-utilities"]
 
 
 readme = "README.md"
