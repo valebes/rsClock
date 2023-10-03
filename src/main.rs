@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.11";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
