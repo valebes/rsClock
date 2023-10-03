@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.9";
+const VERSION: &str = "0.1.10";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -228,6 +228,7 @@ fn help(nm: &String) {
     println!("    -c    Center the clock");
     println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
+    println!("    -o    Print once, then exit");
     process::exit(1);
 }
 
@@ -286,6 +287,7 @@ fn main() {
     let mut date_only = false;
     let mut twelve_hour_block = false;
     let mut twelve_hour_line = false;
+    let mut only_once = false;
 
     /* Default position modifier */
     let x_mod = 1;
@@ -372,6 +374,9 @@ fn main() {
         }
         if &args[i] == &"-D".to_string() {
             date_only = true;
+        }
+        if &args[i] == &"-o".to_string() {
+            only_once = true;
         }
     }
 
@@ -466,6 +471,9 @@ fn main() {
         }
 
         stdout.flush().unwrap();
+        if only_once {
+            break;
+        }
 
         /* Wait for the next cycle */
         let mut exit = 0;
