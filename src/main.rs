@@ -228,6 +228,7 @@ fn help(nm: &String) {
     println!("    -c    Center the clock");
     println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
+    println!("    -o    Print once, then exit");
     process::exit(1);
 }
 
