@@ -13,7 +13,7 @@
 
 */
 
-const VERSION: &str = "0.1.10";
+const VERSION: &str = "0.1.11";
 
 const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
@@ -241,9 +241,9 @@ fn draw<W: Write>(
     stdout: &mut RawTerminal<W>,
 ) {
     for digit in hour {
-        for j in 0..digit.len() {
-            for i in 0..digit[j].len() {
-                if digit[j][i] == true {
+        for (j, row) in digit.iter().enumerate() {
+            for (i, pix) in row.iter().enumerate() {
+                if *pix {
                     write!(
                         stdout,
                         "{}{}{}{}",
@@ -256,11 +256,10 @@ fn draw<W: Write>(
                 } else {
                     write!(
                         stdout,
-                        "{}{}{}{}",
+                        "{}{}{} ",
                         cursor::Goto(i as u16 + pos_x, j as u16 + pos_y),
                         color::Fg(color::Reset),
                         color::Bg(color::Reset),
-                        " "
                     )
                     .unwrap();
                 }
@@ -298,7 +297,7 @@ fn main() {
 
     /* Args parsing */
     for i in 1..args.len() {
-        if &args[i] == &"-f".to_string() {
+        if args[i] == *"-f" {
             // fg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -f");
@@ -315,7 +314,7 @@ fn main() {
                 }
             }
         }
-        if &args[i] == &"-b".to_string() {
+        if args[i] == *"-b" {
             // bg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -b");
@@ -332,49 +331,48 @@ fn main() {
                 }
             }
         }
-        if &args[i] == &"-d".to_string() {
+        if args[i] == *"-d" {
             // Debug mode
             debug = true;
         }
-        if &args[i] == &"-h".to_string() {
+        if args[i] == *"-h" {
             // Help
             help(&nm);
         }
-        if &args[i] == &"-s".to_string() {
+        if args[i] == *"-s" {
             // Custom symbol
             if args.len() <= i + 1 {
                 println!("Invalid option for -s");
                 help(&nm);
             } else {
-                let ch = args.get(i + 1).unwrap();
-                sym = String::from(&ch.to_string());
+                sym = args[i + 1].to_string();
             }
         }
-        if &args[i] == &"-S".to_string() {
+        if args[i] == *"-S" {
             // Display seconds
             seconds = true;
         }
-        if &args[i] == &"-v".to_string() {
+        if args[i] == *"-v" {
             // Priny rsClock version
             println!("rsClock {}", VERSION);
             process::exit(1);
         }
-        if &args[i] == &"-c".to_string() {
+        if args[i] == *"-c" {
             center_clock = true;
         }
-        if &args[i] == &"-u".to_string() {
+        if args[i] == *"-u" {
             twelve_hour_line = true;
         }
-        if &args[i] == &"-U".to_string() {
+        if args[i] == *"-U" {
             twelve_hour_block = true;
         }
-        if &args[i] == &"-T".to_string() {
+        if args[i] == *"-T" {
             time_only = true;
         }
-        if &args[i] == &"-D".to_string() {
+        if args[i] == *"-D" {
             date_only = true;
         }
-        if &args[i] == &"-o".to_string() {
+        if args[i] == *"-o" {
             only_once = true;
         }
     }
