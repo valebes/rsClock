@@ -286,6 +286,7 @@ fn main() {
     let mut date_only = false;
     let mut twelve_hour_block = false;
     let mut twelve_hour_line = false;
+    let mut only_once = false;
 
     /* Default position modifier */
     let x_mod = 1;
@@ -372,6 +373,9 @@ fn main() {
         }
         if &args[i] == &"-D".to_string() {
             date_only = true;
+        }
+        if &args[i] == &"-o".to_string() {
+            only_once = true;
         }
     }
 
@@ -466,6 +470,9 @@ fn main() {
         }
 
         stdout.flush().unwrap();
+        if only_once {
+            break;
+        }
 
         /* Wait for the next cycle */
         let mut exit = 0;
