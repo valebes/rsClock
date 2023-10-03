@@ -42,6 +42,7 @@ unix@weeb:~$ usage : rsclock
     -c    Center the clock
     -v    Show rsClock version
     -h    Display this message
+    -o    Print once, then exit
 ```
 Use "+" and "-" to change foreground color.
 
