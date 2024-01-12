@@ -154,6 +154,7 @@ const M: [[bool; 6]; 5] = [
 extern crate chrono;
 extern crate termion;
 
+use std::os::fd::AsFd;
 use chrono::prelude::*;
 
 use termion::{async_stdin, clear, color, cursor, raw::IntoRawMode, raw::RawTerminal};
@@ -170,7 +171,7 @@ use std::process;
 
 /* Functions */
 
-fn resize_watcher<W: Write>(size: (u16, u16), stdout: &mut RawTerminal<W>) -> bool {
+fn resize_watcher<W: Write + AsFd>(size: (u16, u16), stdout: &mut RawTerminal<W>) -> bool {
     if size != termion::terminal_size().unwrap() {
         write!(stdout, "{}", clear::All).unwrap();
         true
@@ -232,7 +233,7 @@ fn help(nm: &String) {
     process::exit(1);
 }
 
-fn draw<W: Write>(
+fn draw<W: Write + AsFd>(
     hour: Vec<[[bool; 6]; 5]>,
     sym: String,
     mut pos_x: u16,
