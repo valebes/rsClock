@@ -1,6 +1,6 @@
 [package]
 name = "rsclock"
-version = "0.1.10"
+version = "0.1.11"
 authors = ["valebes"]
 edition = "2021"
 
@@ -25,5 +25,5 @@ codegen-units = 1
 panic = 'abort'
 
 [dependencies]
-termion = "2.0.1"
+termion = "3.0.0"
 chrono = "0.4.31"
