@@ -364,10 +364,10 @@ fn main() {
         if &args[i] == &"-c".to_string() {
             center_clock = true;
         }
-        if &args[i] == &"-u".to_string() {
+        if &args[i] == &"-U".to_string() {
             twelve_hour_line = true;
         }
-        if &args[i] == &"-U".to_string() {
+        if &args[i] == &"-u".to_string() {
             twelve_hour_block = true;
         }
         if &args[i] == &"-T".to_string() {
