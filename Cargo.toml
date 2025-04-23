@@ -25,5 +25,5 @@ codegen-units = 1
 panic = 'abort'
 
 [dependencies]
-termion = "4.0.3"
+termion = "4.0.5"
 chrono = "0.4.39"
